@@ -1,18 +1,37 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+      <Followup v-for="item in followups" :key="item.id" :data="item" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Followup from '@/components/Followup.vue'
 
 export default {
   name: 'home',
+  data() {
+    return {
+      followups: [
+          {
+            id: 1,
+            date: "2019-01-24T15:04:04+0000",
+            training: "Front-end developer",
+            trainer: "Olivier Céréssia",
+            description: "Tout se passe bien"
+          },
+          {
+            id: 2,
+            date: "2019-01-25T15:04:04+0000",
+            training: "Front-end developer",
+            trainer: "Nicolas Bauwens",
+            description: "Un peu de mal en JavaScript"
+          }
+      ]
+    }
+  },
   components: {
-    HelloWorld
+    Followup
   }
 }
 </script>
