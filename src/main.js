@@ -1,6 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import moment from 'moment'
+
+Vue.filter('formatDate', function(value, format) {
+  if (value) {
+    console.log(value)
+    return moment(String(value)).format(format);
+  }
+})
 
 Vue.config.productionTip = false
 
