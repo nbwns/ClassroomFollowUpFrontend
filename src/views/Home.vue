@@ -6,65 +6,59 @@
 
 <script>
 // @ is an alias to /src
+import axios from 'axios'
 import Followup from '@/components/Followup.vue'
 
 export default {
   name: 'home',
   data() {
     return {
-      followups: [
-          {
-            id: 1,
-            date: "2019-01-24T15:04:04+0000",
-            training: "Front-end developer",
-            trainer: "Olivier Céréssia",
-            description: "Tout se passe bien"
-          },
-          {
-            id: 2,
-            date: "2019-01-25T15:04:04+0000",
-            training: "Front-end developer",
-            trainer: "Nicolas Bauwens",
-            description: "Un peu de mal en JavaScript"
-          }
-      ],
+      followups: [],
       trainer: null,
-      training: null,
-      filteredFollowups: []
+      training: null
     }
   },
   components: {
     Followup
   },
-  methods: {
-    initialize(){
-      this.trainer = this.$route.query.trainer
-      this.training = this.$route.query.training
-      this.filteredFollowups = this.followups;
-      console.log(this.trainer, this.training, this.filteredFollowups)
-      if(this.trainer){
-        this.filteredFollowups = this.filteredFollowups.filter(item => item.trainer === this.trainer)
-        console.log(this.filteredFollowups)
-      }
+  computed: {
+    filteredFollowups(){
+         let filtered = this.followups;
+         if(this.trainer)
+          filtered = filtered.filter(item => item.Trainer === this.trainer)
+         
+         if(this.training)
+          filtered = filtered.filter(item => item.Training === this.training)
 
-      if(this.training){
-        this.filteredFollowups = this.filteredFollowups.filter(item => item.training === this.training)
-      }
-    },
+        return filtered
+    }
+  },
+  methods: {
     suppress(followup){
-      alert("delete " + followup)
+      axios.delete('http://bf-classroomfollowup.azurewebsites.net/api/followups/'+ followup)
+      .then(response => {
+        console.log(response.data)
+        this.followups.splice(this.followups.findIndex(f => f.ID === followup), 1)
+      })
     },
     update(followup){
-      alert("update " + followup)
+      axios.put('http://bf-classroomfollowup.azurewebsites.net/api/followups/'+ followup.ID, followup)
+      .then(response => {
+          console.log(response.data)
+      })
     }
   },
   created() {
-    this.initialize()
+    axios.get('http://bf-classroomfollowup.azurewebsites.net/api/followups')
+    .then(response => {
+        this.followups = response.data
+    })
   },
   watch: {
     //on doit "observer" le changement de route et rafraichir le composant
     '$route' () {
-      this.initialize()
+      this.trainer = this.$route.query.Trainer
+      this.training = this.$route.query.Training
     }
   }
 }

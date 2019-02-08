@@ -2,18 +2,21 @@
     <div class="followup">
         <div class="followup__detail">
             <h2>
-                <router-link :to="{path: '', query: {trainer: data.trainer}}">{{data.trainer}}</router-link>
+                <router-link :to="{path: '', query: {Trainer: data.Trainer}}">{{data.Trainer}}</router-link>
                 pour 
-                <router-link :to="{path: '', query: {training: data.training}}">{{data.training}}</router-link>
+                <router-link :to="{path: '', query: {Training: data.Training}}">{{data.Training}}</router-link>
                 </h2>
-            <small>Le {{data.date | formatDate("DDD/MM/YYYY HH:mm")}}</small>
+            <small>Le {{data.Date | formatDate("DD/MM/YYYY HH:mm")}}</small>
             <p @click="editing = true" v-if="!editing">
-                {{data.description}}
+                {{data.Description}}
             </p>
-            <textarea v-if="editing" v-model="data.description"></textarea>
+            <textarea v-if="editing" v-model="data.Description"></textarea>
         </div>
-        <div class="followup__options">
-            <a @click.prevent.stop="$emit('suppress', data.id)">D</a> - <a @click.prevent.stop="$emit('update', data.id)">M</a>
+        <div class="followup__options" v-if="!editing">
+            <a title="Supprimer" @click.prevent.stop="$emit('suppress', data.ID)">🗑️</a>&nbsp;<a title="Modifier" @click="editing = true" >🖊️</a>
+        </div>
+        <div class="followup__options" v-if="editing">
+            <a title="Sauver" @click="save(data)" >💾</a>
         </div>
     </div>
 </template>
@@ -24,6 +27,12 @@ export default {
     data(){
         return {
             editing: false
+        }
+    },
+    methods:{
+        save(f){
+            this.editing = false
+            this.$emit("update", f)
         }
     }
 }
@@ -51,6 +60,9 @@ export default {
     .followup__options{
         display:  flex;    
         align-items: center;
+        a{
+            cursor: pointer;
+        }
     }
 }
 </style>
