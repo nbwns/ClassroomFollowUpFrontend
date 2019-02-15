@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import moment from 'moment'
 
+import auth from '@/auth'
+Vue.use(auth)
+
 Vue.filter('formatDate', function(value, format) {
   if (value) {
     console.log(value)
